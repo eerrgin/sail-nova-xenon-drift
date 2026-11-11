@@ -17,7 +17,7 @@
         <span class="brand-mark"><i></i><i></i><i></i><i></i></span>
         <span><strong>ERGİN</strong><small>DJ STUDIO / 01</small></span>
       </a>
-      <div class="top-status"><span class="live-dot"></span><span id="engine-status">SES MOTORU HAZIR</span><span class="status-divider"></span><span>LOCAL AUDIO ENGINE</span></div>
+      <div class="top-status"><span class="live-dot"></span><span id="engine-status">SES MOTORU HAZIR</span><span class="status-divider"></span><span>NO EXTERNAL AUDIO</span></div>
       <div class="top-actions">
         <button class="icon-btn" id="help-btn" type="button" title="Kısayollar ve yardım" aria-label="Yardım">?</button>
         <button class="record-btn" id="record-btn" type="button"><span class="record-dot"></span><span id="record-label">MİKSİ KAYDET</span></button>
@@ -26,17 +26,17 @@
 
     <main id="top">
       <section class="hero-row">
-        <div><div class="eyebrow">TWO DECKS. ONE MIX. YOUR SOUND.</div><h1>Mix your <em>frequency.</em></h1><p class="hero-copy">Parçalarını yükle. İki kanalı eşleştir. Kendi sesini, kendi akışında şekillendir.</p></div>
+        <div><div class="eyebrow">TWO SYNTH DECKS. ORIGINAL SOUND.</div><h1>Mix your <em>frequency.</em></h1><p class="hero-copy">Hazır ses dokularını seç. İki sentez güvertesini eşleştir. Kendi ritmini sıfırdan kur.</p></div>
         <div class="hero-meta"><span class="meta-label">SESSION</span><strong id="session-clock">00:00:00</strong><span class="meta-sub">TARAYICI İÇİ SES İŞLEME</span></div>
       </section>
 
       <section class="deck-grid" aria-label="DJ güverteleri">
         <article class="deck deck-a" id="deck-a" data-deck="A">
-          <div class="deck-heading"><div class="deck-id"><span class="deck-led"></span><span>DECK A</span></div><span class="deck-kind">CHANNEL 01</span></div>
-          <div class="track-info"><div class="track-art art-a"><span class="art-ring"></span><span class="art-core">A</span></div><div class="track-copy"><span class="track-state" id="state-A">ORİJİNAL DEMO / DEEP HOUSE</span><h2 id="title-A">Midnight Current</h2><p id="file-A">Demo ritmi • 124 BPM • 4 ölçü</p></div><button class="load-btn" type="button" data-load="A"><span>＋</span> PARÇA YÜKLE</button><input class="file-input" id="file-input-A" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.flac,.aac">
-          </div>
+          <div class="deck-heading"><div class="deck-id"><span class="deck-led"></span><span>DECK A</span></div><span class="deck-kind">SYNTH CHANNEL 01</span></div>
+          <div class="track-info"><div class="track-art art-a"><span class="art-ring"></span><span class="art-core">A</span></div><div class="track-copy"><span class="track-state" id="state-A">ORİJİNAL SENTEZ / DEEP HOUSE</span><h2 id="title-A">Velvet Current</h2><p id="file-A">Deep House • sıfırdan sentez • harici kayıt yok</p></div></div>
+          <div class="preset-row"><label for="preset-A">ÖZGÜN SES KÜTÜPHANESİ</label><select id="preset-A" class="preset-select"><option value="deep-house">Deep House · 124 BPM</option><option value="melodic-house">Melodic House · 122 BPM</option><option value="techno">Peak-Time Techno · 132 BPM</option><option value="trance">Progressive Trance · 138 BPM</option><option value="disco-funk">Disco Funk · 118 BPM</option><option value="afro-house">Afro House · 116 BPM</option><option value="drum-bass">Drum &amp; Bass · 174 BPM</option><option value="uk-garage">UK Garage · 130 BPM</option><option value="breakbeat">Breakbeat · 132 BPM</option><option value="lofi">Lo-Fi · 86 BPM</option><option value="ambient">Ambient · 74 BPM</option><option value="electro">Electro · 126 BPM</option></select></div>
           <canvas class="waveform" id="wave-A" aria-label="Güverte A ses görselleştirmesi"></canvas>
-          <div class="time-row"><strong id="time-A">00:00.0</strong><span id="duration-A">DEMO LOOP</span><strong id="remain-A">−00:08.0</strong></div>
+          <div class="time-row"><strong id="time-A">00:00.0</strong><span id="duration-A">4 BAR LOOP</span><strong id="remain-A">−00:08.0</strong></div>
           <input class="seek" id="seek-A" type="range" min="0" max="1000" value="0" aria-label="Güverte A parça konumu">
           <div class="transport-row">
             <button class="transport secondary" type="button" data-action="cue" data-deck="A" title="Başa sar">↶</button>
@@ -57,11 +57,11 @@
         </article>
 
         <article class="deck deck-b" id="deck-b" data-deck="B">
-          <div class="deck-heading"><div class="deck-id"><span class="deck-led"></span><span>DECK B</span></div><span class="deck-kind">CHANNEL 02</span></div>
-          <div class="track-info"><div class="track-art art-b"><span class="art-ring"></span><span class="art-core">B</span></div><div class="track-copy"><span class="track-state" id="state-B">ORİJİNAL DEMO / TECHNO</span><h2 id="title-B">Neon Pressure</h2><p id="file-B">Demo ritmi • 128 BPM • 4 ölçü</p></div><button class="load-btn" type="button" data-load="B"><span>＋</span> PARÇA YÜKLE</button><input class="file-input" id="file-input-B" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.flac,.aac">
-          </div>
+          <div class="deck-heading"><div class="deck-id"><span class="deck-led"></span><span>DECK B</span></div><span class="deck-kind">SYNTH CHANNEL 02</span></div>
+          <div class="track-info"><div class="track-art art-b"><span class="art-ring"></span><span class="art-core">B</span></div><div class="track-copy"><span class="track-state" id="state-B">ORİJİNAL SENTEZ / TECHNO</span><h2 id="title-B">Concrete Pulse</h2><p id="file-B">Peak-Time Techno • sıfırdan sentez • harici kayıt yok</p></div></div>
+          <div class="preset-row"><label for="preset-B">ÖZGÜN SES KÜTÜPHANESİ</label><select id="preset-B" class="preset-select"><option value="deep-house">Deep House · 124 BPM</option><option value="melodic-house">Melodic House · 122 BPM</option><option value="techno" selected>Peak-Time Techno · 132 BPM</option><option value="trance">Progressive Trance · 138 BPM</option><option value="disco-funk">Disco Funk · 118 BPM</option><option value="afro-house">Afro House · 116 BPM</option><option value="drum-bass">Drum &amp; Bass · 174 BPM</option><option value="uk-garage">UK Garage · 130 BPM</option><option value="breakbeat">Breakbeat · 132 BPM</option><option value="lofi">Lo-Fi · 86 BPM</option><option value="ambient">Ambient · 74 BPM</option><option value="electro">Electro · 126 BPM</option></select></div>
           <canvas class="waveform" id="wave-B" aria-label="Güverte B ses görselleştirmesi"></canvas>
-          <div class="time-row"><strong id="time-B">00:00.0</strong><span id="duration-B">DEMO LOOP</span><strong id="remain-B">−00:08.0</strong></div>
+          <div class="time-row"><strong id="time-B">00:00.0</strong><span id="duration-B">4 BAR LOOP</span><strong id="remain-B">−00:08.0</strong></div>
           <input class="seek" id="seek-B" type="range" min="0" max="1000" value="0" aria-label="Güverte B parça konumu">
           <div class="transport-row">
             <button class="transport secondary" type="button" data-action="cue" data-deck="B" title="Başa sar">↶</button>
@@ -106,13 +106,13 @@
         </div>
       </section>
 
-      <footer class="footer"><div class="footer-brand"><span class="brand-mini">E</span><span>ERGİN DJ STUDIO</span></div><p>Bu stüdyo harici müzik veya örnek ses içermez. Demo sesleri anlık sentezlenir; yüklediğin dosyalar cihazından çıkmaz.</p><span class="version">BROWSER ENGINE · 1.0</span></footer>
+      <footer class="footer"><div class="footer-brand"><span class="brand-mini">E</span><span>ERGİN DJ STUDIO</span></div><p>Tüm ritimler ve ses dokuları tarayıcıda sıfırdan sentezlenir. Harici kayıt, sample veya müzik dosyası yükleme özelliği yoktur.</p><span class="version">SYNTH ENGINE · 1.1</span></footer>
     </main>
   </div>
 
   <dialog id="help-dialog" class="help-dialog">
     <div class="dialog-head"><div><div class="eyebrow">QUICK GUIDE</div><h2>Stüdyo notları</h2></div><button id="close-help" type="button" class="icon-btn">×</button></div>
-    <div class="help-content"><p><strong>Parça yükle:</strong> Güverte A veya B üzerindeki düğmeyle cihazından ses dosyası seç. Dosyalar yalnızca tarayıcıda işlenir.</p><p><strong>Tempo eşleştir:</strong> BPM değerlerini gir, ardından istediğin güvertede SYNC düğmesine bas. Eşleme, girdiğin BPM değerlerini esas alır.</p><p><strong>Filtre ve EQ:</strong> Filter merkezde açık; sola çevrildiğinde high-pass, sağa çevrildiğinde low-pass çalışır. LOW / MID / HIGH üç bantlı ekolayzırdır.</p><p><strong>Kayıt:</strong> MİKSİ KAYDET, ana çıkışı WebM olarak indirir. Tarayıcın MediaRecorder desteklemelidir.</p><p><strong>Telif:</strong> Demo ritimleri bu uygulama içinde matematiksel olarak sentezlenir. Harici müzik eklenmez. Yalnızca kullanma ve miksleme hakkına sahip olduğun kayıtları yükle.</p></div>
+    <div class="help-content"><p><strong>Ses kütüphanesi:</strong> Her güvertedeki menüden 12 özgün sentez türünden birini seç. Her ses düzeni çalışma anında oluşturulur.</p><p><strong>Tempo eşleştir:</strong> BPM değerlerini gir, ardından istediğin güvertede SYNC düğmesine bas. Eşleme, girdiğin BPM değerlerini esas alır.</p><p><strong>Filtre ve EQ:</strong> Filter merkezde açık; sola çevrildiğinde high-pass, sağa çevrildiğinde low-pass çalışır. LOW / MID / HIGH üç bantlı ekolayzırdır.</p><p><strong>Kayıt:</strong> MİKSİ KAYDET, ana çıkışı WebM olarak indirir. Tarayıcın MediaRecorder desteklemelidir.</p><p><strong>Telif yaklaşımı:</strong> Uygulamada harici şarkı, kayıt, sample veya müzik dosyası bulunmaz. Ritimler, baslar, perküsyonlar ve melodiler Web Audio ile çalışma anında matematiksel olarak sentezlenir.</p></div>
   </dialog>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>

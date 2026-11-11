@@ -1,20 +1,16 @@
 # Ergin DJ Studio
 
-Ergin DJ Studio, tek sayfalı ve tarayıcıda çalışan çift güverteli bir miks konsoludur. Harici bir müzik servisine, API anahtarına, hesap açmaya veya kurulum paketine ihtiyaç duymaz.
+Ergin DJ Studio, hiçbir harici müzik dosyası kullanmadan tarayıcı içinde çalışan çift güverteli bir DJ sentez ve miks konsoludur.
 
-## Hemen aç
+## Çalıştırma
 
-`index.html` dosyasına çift tıklayarak doğrudan tarayıcıda açabilirsin. Daha kararlı yerel kullanım için Node.js 20 veya üstü yüklüyse proje klasöründe:
+`index.html` dosyasına çift tıklayarak doğrudan tarayıcıda açabilirsin. Yerel web sunucusu tercih edersen, Node.js 20 veya üstü ile proje klasöründe:
 
 ```bash
 npm run dev
 ```
 
-Ardından tarayıcı adres çubuğuna şunu yaz:
-
-```text
-http://localhost:8080
-```
+Ardından tarayıcıda `http://localhost:8080` adresini aç.
 
 Derleme ve önizleme:
 
@@ -25,28 +21,32 @@ npm run preview
 
 Önizleme adresi `http://localhost:8081` olur.
 
-## Kullanım
+## Özgün ses kütüphanesi
 
-- **Deck A / Deck B:** Her güverteye PARÇA YÜKLE düğmesiyle veya dosyayı güverte kartına sürükleyerek bir ses dosyası ekle. MP3, WAV, OGG, M4A, FLAC ve tarayıcının tanıdığı diğer ses biçimleri desteklenir.
-- **Play / Cue / Stop:** Çalma, duraklatma ve başa sarma kontrolleri.
-- **BPM / Pitch / Sync:** BPM değerlerini elle belirle; SYNC karşı güvertenin girilmiş BPM değerini hedef alır. Pitch ayrı ince ayar sağlar.
-- **EQ / Filter:** Üç bant ekolayzır, high-pass / low-pass filtre, echo ve reverb gönderimleri.
-- **Loop / Crossfader / Master:** 1, 2, 4 veya 8 ölçülük döngüler, eş güçlü çapraz geçiş ve ana seviye.
-- **One-shot pads:** Kick, snare, clap, hat, tom, riser ve zap sesleri tarayıcıda anlık sentezlenir.
-- **Kayıt:** Ana çıkışı WebM olarak indirir. Kayıt için MediaRecorder destekli güncel bir tarayıcı gerekir.
+Her güvertede 12 sentez stili bulunur: Deep House, Melodic House, Peak-Time Techno, Progressive Trance, Disco Funk, Afro House, Drum & Bass, UK Garage, Breakbeat, Lo-Fi, Ambient ve Electro.
 
-Ses motoru tarayıcı güvenlik kuralları nedeniyle ilk Play veya pad tıklamasında başlar. Dosyalar yerel olarak okunur; sunucuya yüklenmez. Demo ritimleri JavaScript/Web Audio ile çalışma anında üretilir.
+Bunlar harici kayıt veya sample dosyaları değildir. Kick, snare, clap, hi-hat, perküsyon, bas, akor ve melodiler Web Audio API ile kod içinde çalışma anında oluşturulur. Her preset için ayrı ritim yapısı, tempo ve ses tasarımı kullanılır.
+
+## DJ kontrolleri
+
+- İki bağımsız sentez güvertesi ve 12 türden ses seçimi.
+- Play, duraklatma, başa sarma ve konum kontrolü.
+- BPM, pitch ve elle girilen tempoya göre Sync.
+- Üç bant EQ, high-pass / low-pass filtre, Echo ve Reverb.
+- 1, 2, 4 veya 8 ölçülük loop.
+- Crossfader, master seviyesi ve canlı spektrum.
+- Sekiz performans pad'i; ana miksin WebM kaydı.
+
+## Tamamen tarayıcı içinde
+
+Uygulamada parça yükleme, dosya seçici, sürükle-bırak ses alanı, uzak müzik kaynağı, harici sample veya müzik API'si bulunmaz. Ses sentezi ve miks işlemleri tarayıcıda yapılır. Kayıt özelliği yalnızca tarayıcı içindeki sentezlenmiş miks çıkışını kaydeder.
 
 ## GitHub Pages
 
-Depo için GitHub Actions tabanlı Pages iş akışı eklenmiştir. GitHub deposunda **Settings → Pages → Build and deployment → Source** bölümünden **GitHub Actions** seçildiğinde her `main` güncellemesi sonrasında site yayınlanır. Proje adresi:
+GitHub deposunda **Settings → Pages → Build and deployment → Source** bölümünden **GitHub Actions** seçildiğinde `main` dalındaki güncellemeler yayınlanır.
 
-```text
-https://eerrgin.github.io/sail-nova-xenon-drift/
-```
+`https://eerrgin.github.io/sail-nova-xenon-drift/`
 
-İş akışının ilk çalıştırmasından sonra bu adres kullanılabilir.
+## Telif ve üçüncü taraflar
 
-## Lisans ve medya
-
-Bu sürümde harici şarkı, sample paketi, fotoğraf, marka logosu, ikon kütüphanesi veya uzaktan yazı tipi kullanılmaz. Görsel arayüz, SVG işareti ve demo sesleri bu proje için özgün olarak hazırlanmıştır. Yüklediğin müzik dosyalarının kullanım ve miksleme haklarının sende olması gerekir. Bu uygulama herhangi bir parçanın telif durumunu doğrulamaz.
+Bu sürümde harici şarkı, sample paketi, fotoğraf, marka logosu, ikon kütüphanesi, uzaktan yazı tipi, müzik servisi veya çalışma zamanı CDN'i kullanılmaz. Arayüz, simgeler, ritimler ve ses tasarımları proje için hazırlanmış kod ve SVG/CSS öğeleridir. Bu özgün sentez yaklaşımı harici sample lisansına bağımlılığı ortadan kaldırır; ancak telif hukukuna ilişkin mutlak bir garanti veya hukuki görüş değildir.

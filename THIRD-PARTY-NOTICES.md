@@ -1,10 +1,12 @@
 # Medya ve üçüncü taraf bildirimleri
 
-Bu dağıtımın çalışan tarayıcı arayüzü harici ses kaydı, sample, fotoğraf, marka görseli, ikon paketi, uzaktaki font veya çalışma zamanı CDN'i çağırmaz.
+Çalışan DJ Studio sürümünde harici ses kaydı, sample, müzik dosyası, fotoğraf, marka görseli, ikon paketi, uzaktaki font veya çalışma zamanı CDN'i çağrılmaz.
 
-- Demo ritimleri, tek atımlık pad'ler, yankı darbesi ve gürültü örnekleri Web Audio API üzerinden çalışma anında matematiksel olarak üretilir.
-- SVG işareti, arayüz çizimleri, metinler, CSS ve uygulama JavaScript'i bu proje için hazırlanmıştır.
-- Kullanıcının seçtiği ses dosyaları yalnızca kendi tarayıcı oturumunda işlenir ve sunucuya gönderilmez. Kullanıcı, içe aktardığı kayıtların kullanım, çoğaltma, miksleme ve yayımlama haklarından kendisi sorumludur.
-- Tarayıcı ve işletim sistemi tarafından sağlanan Web Audio API, MediaRecorder ve standart HTML medya öğeleri platform özellikleridir; bu projeye gömülü üçüncü taraf medya değildir.
+- Güverte sesleri (kick, snare, clap, hi-hat, perküsyon, bas, akor, melodi ve atmosfer) Web Audio API ile çalışma anında matematiksel olarak sentezlenir.
+- Sekiz performans pad'i de osilatör ve üretilmiş gürültü katmanlarından anlık oluşturulur.
+- Yankı kuyruğu ve reverb impulse buffer uygulama tarafından çalışma anında üretilir; hazır kayıt içermez.
+- Arayüz, SVG işareti, CSS ve uygulama JavaScript'i bu proje için hazırlanmıştır.
+- Uygulamada kullanıcıdan müzik veya ses dosyası seçmesini isteyen bir alan yoktur; dışarıdan ses yüklenemez.
+- Web Audio API ve MediaRecorder, tarayıcının standart platform özellikleridir. Kayıt düğmesi yalnızca uygulamanın kendi sentezlenmiş miks çıkışını kaydeder.
 
-Bu bildirim, kullanıcı tarafından içe aktarılan dosyalar için lisans veya hak garantisi vermez.
+Bu yaklaşım harici sample lisansına bağımlılığı ortadan kaldırır. Telif hukukuna ilişkin mutlak bir garanti vermez; müziğin sonradan kaydı, kullanımı ve yayımlanması ülke ve kullanım koşullarına göre ayrıca değerlendirilebilir.
