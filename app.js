@@ -415,12 +415,6 @@ function drawDeckMeter(d) {
   drawWave(d, currentPosition(d) / d.demoBuffer.duration);
 }
 
-function drawDeckMeter(d) {
-  if(!d.playing||!d.demoBuffer)return;
-  drawWave(d,currentPosition(d)/d.demoBuffer.duration);
-}
-
-
 function drawIdleSpectrum() {
   const canvas = $('spectrum');
   const surface = canvasSurface(canvas);
