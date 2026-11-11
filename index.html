@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#090b10">
+  <meta name="description" content="Ergin DJ Studio — tarayıcı içinde çalışan çift güverteli DJ miks konsolu.">
+  <title>Ergin DJ Studio — Browser Mix Console</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="Ergin DJ Studio ana sayfa">
+        <span class="brand-mark"><i></i><i></i><i></i><i></i></span>
+        <span><strong>ERGİN</strong><small>DJ STUDIO / 01</small></span>
+      </a>
+      <div class="top-status"><span class="live-dot"></span><span id="engine-status">SES MOTORU HAZIR</span><span class="status-divider"></span><span>LOCAL AUDIO ENGINE</span></div>
+      <div class="top-actions">
+        <button class="icon-btn" id="help-btn" type="button" title="Kısayollar ve yardım" aria-label="Yardım">?</button>
+        <button class="record-btn" id="record-btn" type="button"><span class="record-dot"></span><span id="record-label">MİKSİ KAYDET</span></button>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero-row">
+        <div><div class="eyebrow">TWO DECKS. ONE MIX. YOUR SOUND.</div><h1>Mix your <em>frequency.</em></h1><p class="hero-copy">Parçalarını yükle. İki kanalı eşleştir. Kendi sesini, kendi akışında şekillendir.</p></div>
+        <div class="hero-meta"><span class="meta-label">SESSION</span><strong id="session-clock">00:00:00</strong><span class="meta-sub">TARAYICI İÇİ SES İŞLEME</span></div>
+      </section>
+
+      <section class="deck-grid" aria-label="DJ güverteleri">
+        <article class="deck deck-a" id="deck-a" data-deck="A">
+          <div class="deck-heading"><div class="deck-id"><span class="deck-led"></span><span>DECK A</span></div><span class="deck-kind">CHANNEL 01</span></div>
+          <div class="track-info"><div class="track-art art-a"><span class="art-ring"></span><span class="art-core">A</span></div><div class="track-copy"><span class="track-state" id="state-A">ORİJİNAL DEMO / DEEP HOUSE</span><h2 id="title-A">Midnight Current</h2><p id="file-A">Demo ritmi • 124 BPM • 4 ölçü</p></div><button class="load-btn" type="button" data-load="A"><span>＋</span> PARÇA YÜKLE</button><input class="file-input" id="file-input-A" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.flac,.aac">
+          </div>
+          <canvas class="waveform" id="wave-A" aria-label="Güverte A ses görselleştirmesi"></canvas>
+          <div class="time-row"><strong id="time-A">00:00.0</strong><span id="duration-A">DEMO LOOP</span><strong id="remain-A">−00:08.0</strong></div>
+          <input class="seek" id="seek-A" type="range" min="0" max="1000" value="0" aria-label="Güverte A parça konumu">
+          <div class="transport-row">
+            <button class="transport secondary" type="button" data-action="cue" data-deck="A" title="Başa sar">↶</button>
+            <button class="transport play" type="button" data-action="play" data-deck="A" aria-label="Güverte A çal"><span id="play-icon-A">▶</span></button>
+            <button class="transport secondary" type="button" data-action="stop" data-deck="A" title="Durdur">■</button>
+            <div class="tempo-box"><label for="bpm-A">TEMPO / BPM</label><div class="tempo-input"><button type="button" data-step="-1" data-deck="A">−</button><input id="bpm-A" type="number" min="60" max="190" step="1" value="124"><button type="button" data-step="1" data-deck="A">＋</button></div></div>
+            <button class="sync-btn" type="button" data-action="sync" data-deck="A">SYNC</button>
+          </div>
+          <div class="pitch-row"><label for="pitch-A">PITCH</label><input id="pitch-A" type="range" min="-12" max="12" value="0" step="0.1"><span id="pitch-value-A">0.0%</span></div>
+          <div class="control-grid">
+            <div class="control-unit"><label for="filter-A">FILTER</label><input id="filter-A" type="range" min="0" max="100" value="50"><span id="filter-value-A">OPEN</span></div>
+            <div class="control-unit"><label for="low-A">LOW</label><input id="low-A" type="range" min="-12" max="6" value="0"><span id="low-value-A">0 dB</span></div>
+            <div class="control-unit"><label for="mid-A">MID</label><input id="mid-A" type="range" min="-12" max="6" value="0"><span id="mid-value-A">0 dB</span></div>
+            <div class="control-unit"><label for="high-A">HIGH</label><input id="high-A" type="range" min="-12" max="6" value="0"><span id="high-value-A">0 dB</span></div>
+          </div>
+          <div class="fx-row"><div class="fx-control"><label for="volume-A">CHANNEL</label><input id="volume-A" type="range" min="0" max="100" value="82"><b id="volume-value-A">82%</b></div><div class="fx-control"><label for="echo-A">ECHO</label><input id="echo-A" type="range" min="0" max="100" value="0"><b id="echo-value-A">0%</b></div><div class="fx-control"><label for="reverb-A">REVERB</label><input id="reverb-A" type="range" min="0" max="100" value="0"><b id="reverb-value-A">0%</b></div></div>
+          <div class="loop-row"><span>LOOP</span><button type="button" class="loop-btn active" data-loop="0" data-deck="A">OFF</button><button type="button" class="loop-btn" data-loop="1" data-deck="A">1</button><button type="button" class="loop-btn" data-loop="2" data-deck="A">2</button><button type="button" class="loop-btn" data-loop="4" data-deck="A">4</button><button type="button" class="loop-btn" data-loop="8" data-deck="A">8</button><span class="loop-unit">BARS</span></div>
+        </article>
+
+        <article class="deck deck-b" id="deck-b" data-deck="B">
+          <div class="deck-heading"><div class="deck-id"><span class="deck-led"></span><span>DECK B</span></div><span class="deck-kind">CHANNEL 02</span></div>
+          <div class="track-info"><div class="track-art art-b"><span class="art-ring"></span><span class="art-core">B</span></div><div class="track-copy"><span class="track-state" id="state-B">ORİJİNAL DEMO / TECHNO</span><h2 id="title-B">Neon Pressure</h2><p id="file-B">Demo ritmi • 128 BPM • 4 ölçü</p></div><button class="load-btn" type="button" data-load="B"><span>＋</span> PARÇA YÜKLE</button><input class="file-input" id="file-input-B" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.flac,.aac">
+          </div>
+          <canvas class="waveform" id="wave-B" aria-label="Güverte B ses görselleştirmesi"></canvas>
+          <div class="time-row"><strong id="time-B">00:00.0</strong><span id="duration-B">DEMO LOOP</span><strong id="remain-B">−00:08.0</strong></div>
+          <input class="seek" id="seek-B" type="range" min="0" max="1000" value="0" aria-label="Güverte B parça konumu">
+          <div class="transport-row">
+            <button class="transport secondary" type="button" data-action="cue" data-deck="B" title="Başa sar">↶</button>
+            <button class="transport play" type="button" data-action="play" data-deck="B" aria-label="Güverte B çal"><span id="play-icon-B">▶</span></button>
+            <button class="transport secondary" type="button" data-action="stop" data-deck="B" title="Durdur">■</button>
+            <div class="tempo-box"><label for="bpm-B">TEMPO / BPM</label><div class="tempo-input"><button type="button" data-step="-1" data-deck="B">−</button><input id="bpm-B" type="number" min="60" max="190" step="1" value="128"><button type="button" data-step="1" data-deck="B">＋</button></div></div>
+            <button class="sync-btn" type="button" data-action="sync" data-deck="B">SYNC</button>
+          </div>
+          <div class="pitch-row"><label for="pitch-B">PITCH</label><input id="pitch-B" type="range" min="-12" max="12" value="0" step="0.1"><span id="pitch-value-B">0.0%</span></div>
+          <div class="control-grid">
+            <div class="control-unit"><label for="filter-B">FILTER</label><input id="filter-B" type="range" min="0" max="100" value="50"><span id="filter-value-B">OPEN</span></div>
+            <div class="control-unit"><label for="low-B">LOW</label><input id="low-B" type="range" min="-12" max="6" value="0"><span id="low-value-B">0 dB</span></div>
+            <div class="control-unit"><label for="mid-B">MID</label><input id="mid-B" type="range" min="-12" max="6" value="0"><span id="mid-value-B">0 dB</span></div>
+            <div class="control-unit"><label for="high-B">HIGH</label><input id="high-B" type="range" min="-12" max="6" value="0"><span id="high-value-B">0 dB</span></div>
+          </div>
+          <div class="fx-row"><div class="fx-control"><label for="volume-B">CHANNEL</label><input id="volume-B" type="range" min="0" max="100" value="82"><b id="volume-value-B">82%</b></div><div class="fx-control"><label for="echo-B">ECHO</label><input id="echo-B" type="range" min="0" max="100" value="0"><b id="echo-value-B">0%</b></div><div class="fx-control"><label for="reverb-B">REVERB</label><input id="reverb-B" type="range" min="0" max="100" value="0"><b id="reverb-value-B">0%</b></div></div>
+          <div class="loop-row"><span>LOOP</span><button type="button" class="loop-btn active" data-loop="0" data-deck="B">OFF</button><button type="button" class="loop-btn" data-loop="1" data-deck="B">1</button><button type="button" class="loop-btn" data-loop="2" data-deck="B">2</button><button type="button" class="loop-btn" data-loop="4" data-deck="B">4</button><button type="button" class="loop-btn" data-loop="8" data-deck="B">8</button><span class="loop-unit">BARS</span></div>
+        </article>
+      </section>
+
+      <section class="mixer-panel">
+        <div class="mixer-top"><div><div class="eyebrow">MASTER SECTION</div><h2>The Mix Bus</h2></div><div class="master-meter"><span>OUTPUT</span><canvas id="master-meter" width="320" height="44" aria-label="Ses çıkış seviyesi"></canvas><span id="master-level">−∞ dB</span></div></div>
+        <div class="mixer-controls">
+          <div class="cross-section"><div class="cross-labels"><span>DECK A</span><span>CROSSFADER</span><span>DECK B</span></div><input id="crossfader" type="range" min="0" max="100" value="50" aria-label="Çapraz geçiş"/><div class="cross-ends"><span>A ONLY</span><span>CENTER</span><span>B ONLY</span></div></div>
+          <div class="master-volume"><label for="master-volume">MASTER</label><strong id="master-value">78%</strong><input id="master-volume" type="range" min="0" max="100" value="78"></div>
+          <button class="stop-all" id="stop-all" type="button">■ &nbsp; STOP ALL</button>
+        </div>
+        <div class="spectrum-wrap"><div class="spectrum-head"><span>MASTER SPECTRUM</span><span>REAL-TIME ANALYSIS</span></div><canvas id="spectrum" width="900" height="90" aria-label="Gerçek zamanlı spektrum"></canvas></div>
+      </section>
+
+      <section class="performance-panel">
+        <div class="performance-heading"><div><div class="eyebrow">LIVE PERFORMANCE</div><h2>One-shot pads</h2></div><p>Tarayıcı içinde sentezlenen özgün vuruşlar</p></div>
+        <div class="pads-grid">
+          <button class="pad pad-a" data-pad="kick" type="button"><span>01</span><strong>KICK</strong><small>LOW IMPACT</small></button>
+          <button class="pad pad-b" data-pad="snare" type="button"><span>02</span><strong>SNARE</strong><small>NOISE HIT</small></button>
+          <button class="pad pad-c" data-pad="clap" type="button"><span>03</span><strong>CLAP</strong><small>WIDE SNAP</small></button>
+          <button class="pad pad-d" data-pad="hat" type="button"><span>04</span><strong>CLOSED HAT</strong><small>SHORT NOISE</small></button>
+          <button class="pad pad-e" data-pad="open" type="button"><span>05</span><strong>OPEN HAT</strong><small>LONG NOISE</small></button>
+          <button class="pad pad-f" data-pad="tom" type="button"><span>06</span><strong>TOM</strong><small>TONAL HIT</small></button>
+          <button class="pad pad-g" data-pad="riser" type="button"><span>07</span><strong>RISER</strong><small>NOISE SWEEP</small></button>
+          <button class="pad pad-h" data-pad="zap" type="button"><span>08</span><strong>ZAP</strong><small>FM PULSE</small></button>
+        </div>
+      </section>
+
+      <footer class="footer"><div class="footer-brand"><span class="brand-mini">E</span><span>ERGİN DJ STUDIO</span></div><p>Bu stüdyo harici müzik veya örnek ses içermez. Demo sesleri anlık sentezlenir; yüklediğin dosyalar cihazından çıkmaz.</p><span class="version">BROWSER ENGINE · 1.0</span></footer>
+    </main>
+  </div>
+
+  <dialog id="help-dialog" class="help-dialog">
+    <div class="dialog-head"><div><div class="eyebrow">QUICK GUIDE</div><h2>Stüdyo notları</h2></div><button id="close-help" type="button" class="icon-btn">×</button></div>
+    <div class="help-content"><p><strong>Parça yükle:</strong> Güverte A veya B üzerindeki düğmeyle cihazından ses dosyası seç. Dosyalar yalnızca tarayıcıda işlenir.</p><p><strong>Tempo eşleştir:</strong> BPM değerlerini gir, ardından istediğin güvertede SYNC düğmesine bas. Eşleme, girdiğin BPM değerlerini esas alır.</p><p><strong>Filtre ve EQ:</strong> Filter merkezde açık; sola çevrildiğinde high-pass, sağa çevrildiğinde low-pass çalışır. LOW / MID / HIGH üç bantlı ekolayzırdır.</p><p><strong>Kayıt:</strong> MİKSİ KAYDET, ana çıkışı WebM olarak indirir. Tarayıcın MediaRecorder desteklemelidir.</p><p><strong>Telif:</strong> Demo ritimleri bu uygulama içinde matematiksel olarak sentezlenir. Harici müzik eklenmez. Yalnızca kullanma ve miksleme hakkına sahip olduğun kayıtları yükle.</p></div>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
