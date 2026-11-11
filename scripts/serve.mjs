@@ -20,7 +20,7 @@ const server = createServer(async (req, res) => {
   }
   try {
     const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
-    const relative = pathname === '/' ? 'index.html' : pathname.replace(/^\\/+/, '');
+    const relative = pathname === '/' ? 'index.html' : pathname.slice(1);
     const target = resolve(root, relative);
     if (target !== root && !target.startsWith(root + sep)) throw new Error('Invalid path');
     const info = await stat(target);
