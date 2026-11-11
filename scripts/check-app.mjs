@@ -30,3 +30,9 @@ assert(/@media\(max-width:760px\)/.test(css) && /\.preset-select/.test(css), 're
 
 if (process.exitCode) process.exit(process.exitCode);
 console.log('Ergin DJ Studio static validation complete.');
+
+assert(html.includes('id="mobile-mode-btn"') && html.includes('data-mobile-view="mixer"'), 'mobile mode and focused deck/mixer tabs are available');
+assert(css.includes('.waveform{display:block;width:100%;height:76px;'), 'both deck waveform canvases receive an explicit responsive size');
+assert(app.includes('function canvasSurface(canvas)') && app.includes('canvas.width !== pixelWidth'), 'canvas backing stores resize only when their dimensions change');
+assert(app.includes('lastWaveDrawAt') && app.includes('lastSpectrumDrawAt'), 'mobile visualizer drawing is throttled to protect touch-device performance');
+assert(app.includes('document.addEventListener(\'visibilitychange\''), 'visualizer animation pauses when the page is in the background');

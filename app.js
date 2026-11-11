@@ -54,6 +54,9 @@ let masterVolume = .78;
 let crossValue = .5;
 let sessionStarted = performance.now();
 let toastTimer = null;
+let animationFrameId = null;
+let lastSpectrumDrawAt = 0;
+let canvasResizeFrame = 0;
 
 function makeImpulse(context, seconds=2.4, decay=2.8) {
   const length = Math.floor(context.sampleRate * seconds);
@@ -323,37 +326,93 @@ async function choosePreset(d,presetId) {
 }
 
 
-function drawIdleWave(d) {
-  const canvas = $('wave-' + d.id); if (!canvas) return;
-  const rect = canvas.getBoundingClientRect(); if (!rect.width) return;
-  const ratio = Math.min(2, window.devicePixelRatio || 1);
-  canvas.width = Math.round(rect.width * ratio); canvas.height = Math.round(rect.height * ratio);
-  const g = canvas.getContext('2d'); g.setTransform(ratio,0,0,ratio,0,0); g.clearRect(0,0,rect.width,rect.height);
-  const color = d.id === 'A' ? '#f2a93b' : '#3ed7c4';
-  const count = Math.floor(rect.width / 3.6), mid = rect.height / 2;
-  for (let i=0;i<count;i++) {
-    const v = .12 + Math.abs(Math.sin(i*.42)*Math.cos(i*.083))*.58 + Math.abs(Math.sin(i*.071))*.12;
-    g.fillStyle = color; g.globalAlpha = .2 + v*.6;
-    g.fillRect(i*3.6,mid-v*mid*.8,2,v*mid*1.6);
+function canvasSurface(canvas) {
+  if (!canvas) return null;
+  const rect = canvas.getBoundingClientRect();
+  if (rect.width < 1 || rect.height < 1) return null;
+  const isCompact = window.matchMedia?.('(max-width: 760px)').matches;
+  const ratio = Math.min(window.devicePixelRatio || 1, isCompact ? 1.5 : 2);
+  const pixelWidth = Math.max(1, Math.round(rect.width * ratio));
+  const pixelHeight = Math.max(1, Math.round(rect.height * ratio));
+
+  // Resizing a canvas clears it and resets its drawing context. Only resize
+  // when its displayed size or device-pixel ratio actually changes.
+  if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+    canvas.width = pixelWidth;
+    canvas.height = pixelHeight;
   }
-  g.globalAlpha=1;
+
+  let context = null;
+  try {
+    context = canvas.getContext('2d', { alpha: true, desynchronized: true });
+  } catch {
+    context = canvas.getContext('2d');
+  }
+  if (!context) return null;
+  context.setTransform(ratio, 0, 0, ratio, 0, 0);
+  return { context, width: rect.width, height: rect.height, ratio };
 }
-function drawWave(d, progress = -1) {
-  const canvas = $('wave-' + d.id); if (!canvas) return;
-  const rect = canvas.getBoundingClientRect(); if (!rect.width) return;
-  const ratio = Math.min(2, window.devicePixelRatio || 1);
-  canvas.width = Math.round(rect.width*ratio); canvas.height = Math.round(rect.height*ratio);
-  const g=canvas.getContext('2d'); g.setTransform(ratio,0,0,ratio,0,0); g.clearRect(0,0,rect.width,rect.height);
-  const color=d.id==='A'?'#f2a93b':'#3ed7c4', data=d.waveform?.getChannelData(0);
-  if(!data){drawIdleWave(d);return;}
-  const mid=rect.height/2, samples=Math.max(1,Math.floor(data.length/(rect.width*1.35)));
-  for(let x=0;x<rect.width;x++){
-    const start=Math.floor(x*samples),end=Math.min(data.length,start+samples);let min=1,max=-1;
-    for(let j=start;j<end;j+=Math.max(1,Math.floor(samples/25))){min=Math.min(min,data[j]);max=Math.max(max,data[j]);}
-    const height=Math.max(1,(max-min)*mid*.86);g.fillStyle=color;g.globalAlpha=.58+Math.min(1,height/mid)*.3;g.fillRect(x,mid-height/2,1.35,height);
+
+function drawIdleWave(d) {
+  const canvas = $('wave-' + d.id);
+  const surface = canvasSurface(canvas);
+  if (!surface) return;
+  const { context: g, width, height } = surface;
+  g.clearRect(0, 0, width, height);
+  const color = d.id === 'A' ? '#f2a93b' : '#3ed7c4';
+  const count = Math.floor(width / 3.6), mid = height / 2;
+  for (let i = 0; i < count; i++) {
+    const v = .12 + Math.abs(Math.sin(i * .42) * Math.cos(i * .083)) * .58 + Math.abs(Math.sin(i * .071)) * .12;
+    g.fillStyle = color;
+    g.globalAlpha = .2 + v * .6;
+    g.fillRect(i * 3.6, mid - v * mid * .8, 2, v * mid * 1.6);
   }
-  g.globalAlpha=1;
-  if(progress>=0){g.fillStyle=color;g.globalAlpha=.95;g.fillRect(clamp(progress,0,1)*rect.width-1,0,2,rect.height);g.globalAlpha=1;}
+  g.globalAlpha = 1;
+}
+
+function drawWave(d, progress = -1) {
+  const canvas = $('wave-' + d.id);
+  const surface = canvasSurface(canvas);
+  if (!surface) return;
+  const { context: g, width, height } = surface;
+  const data = d.waveform?.getChannelData(0);
+  if (!data) {
+    drawIdleWave(d);
+    return;
+  }
+
+  g.clearRect(0, 0, width, height);
+  const color = d.id === 'A' ? '#f2a93b' : '#3ed7c4';
+  const mid = height / 2;
+  const samples = Math.max(1, Math.floor(data.length / (width * 1.35)));
+  for (let x = 0; x < width; x++) {
+    const start = Math.floor(x * samples), end = Math.min(data.length, start + samples);
+    let min = 1, max = -1;
+    for (let j = start; j < end; j += Math.max(1, Math.floor(samples / 25))) {
+      min = Math.min(min, data[j]);
+      max = Math.max(max, data[j]);
+    }
+    const barHeight = Math.max(1, (max - min) * mid * .86);
+    g.fillStyle = color;
+    g.globalAlpha = .58 + Math.min(1, barHeight / Math.max(1, mid)) * .3;
+    g.fillRect(x, mid - barHeight / 2, 1.35, barHeight);
+  }
+  g.globalAlpha = 1;
+  if (progress >= 0) {
+    g.fillStyle = color;
+    g.globalAlpha = .95;
+    g.fillRect(clamp(progress, 0, 1) * width - 1, 0, 2, height);
+    g.globalAlpha = 1;
+  }
+}
+
+function drawDeckMeter(d) {
+  if (!d.playing || !d.demoBuffer) return;
+  const now = performance.now();
+  const minInterval = window.matchMedia?.('(max-width: 760px)').matches ? 55 : 32;
+  if (now - (d.lastWaveDrawAt || 0) < minInterval) return;
+  d.lastWaveDrawAt = now;
+  drawWave(d, currentPosition(d) / d.demoBuffer.duration);
 }
 
 function drawDeckMeter(d) {
@@ -362,19 +421,85 @@ function drawDeckMeter(d) {
 }
 
 
+function drawIdleSpectrum() {
+  const canvas = $('spectrum');
+  const surface = canvasSurface(canvas);
+  if (surface) {
+    const { context: g, width, height } = surface;
+    g.clearRect(0, 0, width, height);
+    const bars = 72, gap = 2, barWidth = Math.max(0, (width - gap * (bars - 1)) / bars);
+    for (let i = 0; i < bars; i++) {
+      const envelope = .12 + Math.abs(Math.sin(i * .31) * Math.cos(i * .067)) * .27;
+      const barHeight = Math.max(2, envelope * height);
+      g.fillStyle = i < bars * .48 ? '#f2a93b' : '#3ed7c4';
+      g.globalAlpha = .2 + envelope;
+      g.fillRect(i * (barWidth + gap), height - barHeight, barWidth, barHeight);
+    }
+    g.globalAlpha = 1;
+  }
+  const meter = canvasSurface($('master-meter'));
+  if (meter) {
+    const { context: g, width, height } = meter;
+    g.clearRect(0, 0, width, height);
+    const count = 36, gap = 2, barWidth = Math.max(0, (width - gap * (count - 1)) / count);
+    for (let i = 0; i < count; i++) {
+      const level = .12 + Math.abs(Math.sin(i * .38)) * .14;
+      g.fillStyle = i > count * .84 ? '#ff626a' : i > count * .65 ? '#f2a93b' : '#3ed7c4';
+      g.globalAlpha = .35;
+      g.fillRect(i * (barWidth + gap), height - height * level, barWidth, height * level);
+    }
+    g.globalAlpha = 1;
+  }
+  $('master-level').textContent = '−∞ dB';
+}
+
 function drawSpectrum() {
-  const canvas=$('spectrum'), meter=$('master-meter'); if(!canvas || !masterAnalyser) return;
-  const w=canvas.clientWidth,h=canvas.clientHeight,ratio=Math.min(2,window.devicePixelRatio||1);
-  if(!w || !h) return;
-  if(canvas.width!==Math.round(w*ratio)||canvas.height!==Math.round(h*ratio)){canvas.width=Math.round(w*ratio);canvas.height=Math.round(h*ratio);}
-  const g=canvas.getContext('2d');g.setTransform(ratio,0,0,ratio,0,0);g.clearRect(0,0,w,h);
-  const data=new Uint8Array(masterAnalyser.frequencyBinCount);masterAnalyser.getByteFrequencyData(data);const bars=100,gap=2,bw=(w-gap*(bars-1))/bars;
-  for(let i=0;i<bars;i++){const ix=Math.floor(Math.pow(i/bars,1.7)*data.length),v=data[ix]/255;const bh=Math.max(1,v*h*.94);g.fillStyle=i<bars*.48?'#f2a93b':'#3ed7c4';g.globalAlpha=.3+v*.7;g.fillRect(i*(bw+gap),h-bh,bw,bh);}
-  g.globalAlpha=1;
-  if(meter){const mw=meter.clientWidth,mh=meter.clientHeight;const mr=Math.min(2,window.devicePixelRatio||1);if(meter.width!==Math.round(mw*mr)||meter.height!==Math.round(mh*mr)){meter.width=Math.round(mw*mr);meter.height=Math.round(mh*mr);}const mg=meter.getContext('2d');mg.setTransform(mr,0,0,mr,0,0);mg.clearRect(0,0,mw,mh);const n=36,barW=(mw-n*2)/n;for(let i=0;i<n;i++){const v=data[Math.floor((i/n)*data.length)]/255;mg.fillStyle=i>n*.84?'#ff626a':i>n*.65?'#f2a93b':'#3ed7c4';mg.globalAlpha=.28+v*.72;mg.fillRect(i*(barW+2),mh-v*mh,barW,v*mh);}mg.globalAlpha=1;const peak=Math.max(...data.slice(0,80));$('master-level').textContent=peak?`${(20*Math.log10(peak/255)).toFixed(1)} dB`:'−∞ dB';}
+  const now = performance.now();
+  const minInterval = window.matchMedia?.('(max-width: 760px)').matches ? 50 : 32;
+  if (now - lastSpectrumDrawAt < minInterval) return;
+  lastSpectrumDrawAt = now;
+
+  const canvas = $('spectrum'), meterCanvas = $('master-meter');
+  if (!canvas || !masterAnalyser) return;
+  const surface = canvasSurface(canvas);
+  if (!surface) return;
+  const { context: g, width, height } = surface;
+  g.clearRect(0, 0, width, height);
+  const data = new Uint8Array(masterAnalyser.frequencyBinCount);
+  masterAnalyser.getByteFrequencyData(data);
+  const bars = 100, gap = 2, barWidth = (width - gap * (bars - 1)) / bars;
+  for (let i = 0; i < bars; i++) {
+    const index = Math.floor(Math.pow(i / bars, 1.7) * data.length);
+    const value = data[index] / 255;
+    const barHeight = Math.max(1, value * height * .94);
+    g.fillStyle = i < bars * .48 ? '#f2a93b' : '#3ed7c4';
+    g.globalAlpha = .3 + value * .7;
+    g.fillRect(i * (barWidth + gap), height - barHeight, barWidth, barHeight);
+  }
+  g.globalAlpha = 1;
+
+  const meter = canvasSurface(meterCanvas);
+  if (meter) {
+    const { context: mg, width: meterWidth, height: meterHeight } = meter;
+    mg.clearRect(0, 0, meterWidth, meterHeight);
+    const count = 36, gap = 2, barWidth = (meterWidth - count * gap) / count;
+    for (let i = 0; i < count; i++) {
+      const value = data[Math.floor((i / count) * data.length)] / 255;
+      mg.fillStyle = i > count * .84 ? '#ff626a' : i > count * .65 ? '#f2a93b' : '#3ed7c4';
+      mg.globalAlpha = .28 + value * .72;
+      mg.fillRect(i * (barWidth + gap), meterHeight - value * meterHeight, barWidth, value * meterHeight);
+    }
+    mg.globalAlpha = 1;
+    const peak = Math.max(...data.slice(0, 80));
+    $('master-level').textContent = peak ? `${(20 * Math.log10(peak / 255)).toFixed(1)} dB` : '−∞ dB';
+  }
 }
 
 function updateClockAndPosition() {
+  if (document.hidden) {
+    animationFrameId = null;
+    return;
+  }
   const elapsed=Math.floor((performance.now()-sessionStarted)/1000);
   $('session-clock').textContent=`${String(Math.floor(elapsed/3600)).padStart(2,'0')}:${String(Math.floor((elapsed%3600)/60)).padStart(2,'0')}:${String(elapsed%60).padStart(2,'0')}`;
   for(const d of Object.values(deckState)){
@@ -390,7 +515,7 @@ function updateClockAndPosition() {
     drawDeckMeter(d);
   }
   if(masterAnalyser)drawSpectrum();
-  requestAnimationFrame(updateClockAndPosition);
+  animationFrameId = requestAnimationFrame(updateClockAndPosition);
 }
 
 
@@ -451,6 +576,71 @@ async function toggleRecording(){
   }
 }
 
+function setMobileView(view) {
+  const allowed = new Set(['a', 'b', 'mixer', 'pads', 'all']);
+  const next = allowed.has(view) ? view : 'a';
+  document.body.dataset.mobileView = next;
+  document.querySelectorAll('[data-mobile-view]').forEach((button) => {
+    button.setAttribute('aria-pressed', button.dataset.mobileView === next ? 'true' : 'false');
+  });
+}
+
+function setMobileMode(enabled, view = 'a') {
+  document.body.classList.toggle('mobile-mode', enabled);
+  if (enabled) setMobileView(view);
+  else setMobileView('all');
+  const button = $('mobile-mode-btn');
+  const label = $('mobile-mode-label');
+  if (button) {
+    button.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+    button.setAttribute('aria-label', enabled ? 'Mobil moddan çık ve tüm konsolu göster' : 'Mobil konsol görünümünü aç');
+  }
+  if (label) label.textContent = enabled ? 'TAM GÖRÜNÜM' : 'MOBİL MOD';
+}
+
+function bindMobileMode() {
+  const modeButton = $('mobile-mode-btn');
+  const mobileViewport = window.matchMedia ? window.matchMedia('(max-width: 760px)') : null;
+  let manuallyChanged = false;
+
+  setMobileMode(Boolean(mobileViewport?.matches), 'a');
+  modeButton?.addEventListener('click', () => {
+    manuallyChanged = true;
+    setMobileMode(!document.body.classList.contains('mobile-mode'), 'a');
+  });
+  document.querySelectorAll('[data-mobile-view]').forEach((button) => {
+    button.addEventListener('click', () => setMobileView(button.dataset.mobileView));
+  });
+
+  const followViewport = (event) => {
+    if (!manuallyChanged) setMobileMode(event.matches, event.matches ? 'a' : 'all');
+  };
+  if (mobileViewport?.addEventListener) mobileViewport.addEventListener('change', followViewport);
+  else if (mobileViewport?.addListener) mobileViewport.addListener(followViewport);
+}
+
+function refreshCanvasDisplays() {
+  for (const d of Object.values(deckState)) {
+    d.lastWaveDrawAt = 0;
+    if (d.waveform) drawWave(d);
+    else drawIdleWave(d);
+  }
+  if (masterAnalyser) {
+    lastSpectrumDrawAt = 0;
+    drawSpectrum();
+  } else {
+    drawIdleSpectrum();
+  }
+}
+
+function scheduleCanvasRefresh() {
+  if (canvasResizeFrame) cancelAnimationFrame(canvasResizeFrame);
+  canvasResizeFrame = requestAnimationFrame(() => {
+    canvasResizeFrame = 0;
+    refreshCanvasDisplays();
+  });
+}
+
 function bindEvents(){
   for(const id of ['A','B']){
     const d=deckState[id];
@@ -480,10 +670,22 @@ function bindEvents(){
   $('help-btn').addEventListener('click',()=> $('help-dialog').showModal());
   $('close-help').addEventListener('click',()=> $('help-dialog').close());
   $('help-dialog').addEventListener('click',e=>{if(e.target===$('help-dialog'))$('help-dialog').close();});
-  window.addEventListener('resize',()=>{for(const d of Object.values(deckState)){if(d.waveform)drawWave(d);else drawIdleWave(d);}});
+  window.addEventListener('resize', scheduleCanvasRefresh, { passive: true });
+  window.addEventListener('orientationchange', scheduleCanvasRefresh, { passive: true });
+  if ('ResizeObserver' in window) {
+    const observer = new ResizeObserver(scheduleCanvasRefresh);
+    document.querySelectorAll('.waveform, #spectrum, #master-meter').forEach((canvas) => observer.observe(canvas));
+  }
 }
 
 
 bindEvents();
+bindMobileMode();
 for(const d of Object.values(deckState)){$('preset-'+d.id).value=d.preset;updateTrackDetails(d);drawIdleWave(d);updateTransport(d);}
-requestAnimationFrame(updateClockAndPosition);
+drawIdleSpectrum();
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && animationFrameId === null) {
+    animationFrameId = requestAnimationFrame(updateClockAndPosition);
+  }
+});
+animationFrameId = requestAnimationFrame(updateClockAndPosition);

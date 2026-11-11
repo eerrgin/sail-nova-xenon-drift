@@ -20,7 +20,8 @@
       <div class="top-status"><span class="live-dot"></span><span id="engine-status">SES MOTORU HAZIR</span><span class="status-divider"></span><span>NO EXTERNAL AUDIO</span></div>
       <div class="top-actions">
         <button class="icon-btn" id="help-btn" type="button" title="Kısayollar ve yardım" aria-label="Yardım">?</button>
-        <button class="record-btn" id="record-btn" type="button"><span class="record-dot"></span><span id="record-label">MİKSİ KAYDET</span></button>
+        <button class="mobile-mode-btn" id="mobile-mode-btn" type="button" aria-pressed="false" aria-label="Mobil konsol görünümünü aç" title="Mobil konsol görünümünü değiştir"><span aria-hidden="true">▣</span><span id="mobile-mode-label">MOBİL MOD</span></button>
+        <button class="record-btn" id="record-btn" type="button" title="Miksi kaydet veya kaydı bitir"><span class="record-dot"></span><span id="record-label">MİKSİ KAYDET</span></button>
       </div>
     </header>
 
@@ -29,6 +30,14 @@
         <div><div class="eyebrow">TWO SYNTH DECKS. ORIGINAL SOUND.</div><h1>Mix your <em>frequency.</em></h1><p class="hero-copy">Hazır ses dokularını seç. İki sentez güvertesini eşleştir. Kendi ritmini sıfırdan kur.</p></div>
         <div class="hero-meta"><span class="meta-label">SESSION</span><strong id="session-clock">00:00:00</strong><span class="meta-sub">TARAYICI İÇİ SES İŞLEME</span></div>
       </section>
+
+      <nav class="mobile-view-nav" id="mobile-view-nav" aria-label="Mobil konsol bölümleri">
+        <button type="button" data-mobile-view="a" aria-pressed="true">DECK A</button>
+        <button type="button" data-mobile-view="b" aria-pressed="false">DECK B</button>
+        <button type="button" data-mobile-view="mixer" aria-pressed="false">MIXER</button>
+        <button type="button" data-mobile-view="pads" aria-pressed="false">PADS</button>
+        <button type="button" data-mobile-view="all" aria-pressed="false">HEPSİ</button>
+      </nav>
 
       <section class="deck-grid" aria-label="DJ güverteleri">
         <article class="deck deck-a" id="deck-a" data-deck="A">
